@@ -16,6 +16,7 @@
 
 package com.wolf.wxgallerybackend.controller;
 
+import com.wolf.wxgallerybackend.common.BaseResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,14 @@ public class BasicController {
     @ResponseBody
     public String hello(@RequestParam(name = "name", defaultValue = "unknown user") String name) {
         return "Hello " + name;
+    }
+
+    // http://127.0.0.1:8080/hello?name=lisi
+    @RequestMapping("/helloTest")
+    @ResponseBody
+    public BaseResponse<String> helloTest(@RequestParam(name = "name", defaultValue = "unknown user") String name) {
+        System.out.println(1/0);
+        return new BaseResponse<>(200, "Hello " + name);
     }
 
     // http://127.0.0.1:8080/user
