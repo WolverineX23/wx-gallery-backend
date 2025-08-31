@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wolf.wxgallerybackend.demos.web;
+package com.wolf.wxgallerybackend.controller;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>

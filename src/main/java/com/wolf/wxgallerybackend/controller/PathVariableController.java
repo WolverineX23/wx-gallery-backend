@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wolf.wxgallerybackend.demos.web;
+package com.wolf.wxgallerybackend.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

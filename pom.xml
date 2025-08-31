@@ -50,6 +50,13 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.38</version>
         </dependency>
+
+        <!-- 接口文档 knife4j：https://doc.xiaominfo.com/docs/quick-start#openapi2 -->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+            <version>4.4.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
