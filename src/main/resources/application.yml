@@ -11,3 +11,15 @@ spring:
     url: jdbc:mysql://localhost:3306/wx_gallery
     username: root
     password: wx123456
+
+# mybatis-plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false  # 不使用驼峰命名
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 仅在开发环境打印日志
+  global-config:
+    db-config:
+      # 逻辑删除
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
