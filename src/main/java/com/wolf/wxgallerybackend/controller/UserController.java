@@ -1,7 +1,9 @@
 package com.wolf.wxgallerybackend.controller;
 
+import com.wolf.wxgallerybackend.annotation.AuthCheck;
 import com.wolf.wxgallerybackend.common.BaseResponse;
 import com.wolf.wxgallerybackend.common.ResultUtils;
+import com.wolf.wxgallerybackend.constant.UserConstant;
 import com.wolf.wxgallerybackend.exception.ErrorCode;
 import com.wolf.wxgallerybackend.exception.ThrowUtils;
 import com.wolf.wxgallerybackend.model.dto.UserLoginRequest;
