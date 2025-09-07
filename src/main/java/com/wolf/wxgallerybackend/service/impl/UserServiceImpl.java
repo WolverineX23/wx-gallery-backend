@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wolf.wxgallerybackend.constant.UserConstant;
 import com.wolf.wxgallerybackend.exception.BusinessException;
 import com.wolf.wxgallerybackend.exception.ErrorCode;
+import com.wolf.wxgallerybackend.exception.ThrowUtils;
 import com.wolf.wxgallerybackend.model.entity.User;
 import com.wolf.wxgallerybackend.model.enums.UserRoleEnum;
 import com.wolf.wxgallerybackend.model.vo.LoginUserVO;
@@ -79,6 +80,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return user.getId();    // 主键回填
     }
 
+    /**
+     * 获取脱敏后的用户信息
+     *
+     * @param user User
+     * @return LoginUserVo
+     */
+    @Override
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtil.copyProperties(user, loginUserVO);
+        return loginUserVO;
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param userAccount  用户账户
+     * @param userPassword 用户密码
+     * @param request      session
+     * @return 脱敏后的用户信息
+     */
     @Override
     public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
@@ -108,23 +133,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return this.getLoginUserVO(user);
     }
 
-
-    /**
-     * 获取脱敏后的用户信息
-     *
-     * @param user User
-     * @return LoginUserVo
-     */
-    @Override
-    public LoginUserVO getLoginUserVO(User user) {
-        if (user == null) {
-            return null;
-        }
-        LoginUserVO loginUserVO = new LoginUserVO();
-        BeanUtil.copyProperties(user, loginUserVO);
-        return loginUserVO;
-    }
-
     /**
      * 密码加密 - 脱敏
      *
@@ -137,6 +145,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         final String SALT = "wolf";
 
         return DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        // 判断是否已登录 - 从 session 缓存查
+        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        ThrowUtils.throwIf(currentUser == null || currentUser.getId() == null, ErrorCode.NOT_LOGIN_ERROR);
+
+        // 从数据库中查询 - 防止用户修改用户信息/用户被删除后，session 中的用户状态未更新的情况。（追求性能可注释，直接返回）
+        Long userId = currentUser.getId();
+        currentUser = this.getById(userId);
+        ThrowUtils.throwIf(currentUser == null, ErrorCode.NOT_LOGIN_ERROR);
+        return currentUser;
+    }
+
+    /**
+     * 用户登出
+     *
+     * @param request   session
+     * @return          操作成功/失败
+     */
+    @Override
+    public boolean userLogout(HttpServletRequest request) {
+        // 判断是否已登录 - 从 session 缓存查
+        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        ThrowUtils.throwIf(userObj == null, ErrorCode.OPERATION_ERROR, "未登录");
+
+        // 移除登录态
+        request.getSession().removeAttribute(UserConstant.USER_LOGIN_STATE);
+        return true;
     }
 }
 

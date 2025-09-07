@@ -6,6 +6,7 @@ import com.wolf.wxgallerybackend.exception.ErrorCode;
 import com.wolf.wxgallerybackend.exception.ThrowUtils;
 import com.wolf.wxgallerybackend.model.dto.UserLoginRequest;
 import com.wolf.wxgallerybackend.model.dto.UserRegisterRequest;
+import com.wolf.wxgallerybackend.model.entity.User;
 import com.wolf.wxgallerybackend.model.vo.LoginUserVO;
 import com.wolf.wxgallerybackend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,6 @@ public class UserController {
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
         long userId = userService.userRegister(userAccount, userPassword, checkPassword);
-
         return ResultUtils.success(userId);
     }
 
@@ -42,9 +42,26 @@ public class UserController {
         ThrowUtils.throwIf(userLoginRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
-
         LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword, request);
-
         return ResultUtils.success(loginUserVO);
+    }
+
+    /**
+     * 获取当前登录用户
+     */
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+//        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(loginUser));
+    }
+
+    /**
+     * 用户登出
+     */
+    @GetMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        boolean res = userService.userLogout(request);
+        return ResultUtils.success(res);
     }
 }
