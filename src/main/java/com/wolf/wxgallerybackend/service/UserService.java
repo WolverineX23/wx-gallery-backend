@@ -1,10 +1,14 @@
 package com.wolf.wxgallerybackend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wolf.wxgallerybackend.model.dto.user.UserQueryRequest;
 import com.wolf.wxgallerybackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wolf.wxgallerybackend.model.vo.LoginUserVO;
+import com.wolf.wxgallerybackend.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author 54703
@@ -42,12 +46,31 @@ public interface UserService extends IService<User> {
     LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
-     * 获取脱敏后的用户信息
+     * 获取脱敏后的登录用户信息
      *
      * @param user User
      * @return LoginUserVo
      */
     LoginUserVO getLoginUserVO(User user);
+
+    /**
+     * 获取脱敏后的用户信息
+     * -  区别 getLoginUserVo，查询自己登录的账号信息和查询别人的账号信息。
+     *
+     * @param user User
+     * @return UserVo
+     */
+    UserVO getUserVO(User user);
+
+
+    /**
+     * 获取脱敏后的用户信息列表
+     *
+     * @param userList List<User>
+     * @return UserVo
+     */
+    List<UserVO> getUserVOList(List<User> userList);
+
 
     /**
      * 获取当前登录用户
@@ -64,4 +87,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 获取查询条件
+     *
+     * @param userQueryRequest
+     * @return
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 }

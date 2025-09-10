@@ -1,4 +1,4 @@
-package com.wolf.wxgallerybackend.model.dto;
+package com.wolf.wxgallerybackend.model.dto.user;
 
 import lombok.Data;
 
